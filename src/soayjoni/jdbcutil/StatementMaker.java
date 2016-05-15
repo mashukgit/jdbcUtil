@@ -154,7 +154,7 @@ public class StatementMaker {
         if (rs == null) {
             throw new IllegalArgumentException("ResultSet is null");
         }
-        
+
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
         Param[] params = new Param[columnCount];
