@@ -34,12 +34,11 @@ public class StatementMaker {
         return false;
     }
 
-    private Param[] sortedParamByIndex(Param[] params) {
+    private Param[] sortParamByIndex(Param[] params) {
         if (params == null) {
             throw new NullPointerException("params can not be null");
         }
         if (params.length == 0) {
-            //throw new IllegalArgumentException("zero length of param array is unexpected");
             return params;
         }
         Param[] sortedParams = new Param[params.length];
