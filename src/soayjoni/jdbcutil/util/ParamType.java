@@ -21,6 +21,7 @@ public enum ParamType {
     BOOLEAN,
     STRING,
     BIG_DECIMAL,
-    SQL_DATE;
-
+    SQL_DATE,
+    SQL_TIME,
+    SQL_TIMESTAMP;
 }

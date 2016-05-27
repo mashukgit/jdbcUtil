@@ -160,8 +160,8 @@ public class StatementMaker {
         Param[] params = new Param[columnCount];
         for (int column = 1; column <= params.length; column++) {
             String columnLabel = metaData.getColumnLabel(column);
-
-            ParamType paramType = getParamType(column, metaData);
+            String columnClassName = metaData.getColumnClassName(column);
+            ParamType paramType = getParamType(columnClassName);
             switch (paramType) {
                 case BYTE:
                     byte byte1 = rs.getByte(columnLabel);
@@ -199,17 +199,20 @@ public class StatementMaker {
                 case SQL_DATE:
                     java.sql.Date dt = rs.getDate(columnLabel);
                     params[column] = new Param(column, paramType, columnLabel, dt);
+                case SQL_TIME:
+                    java.sql.Time tm = rs.getTime(columnLabel);
+                    params[column] = new Param(column, paramType, columnLabel, tm);
+                case SQL_TIMESTAMP:
+                    java.sql.Timestamp tmst = rs.getTimestamp(columnLabel);
+                    params[column] = new Param(column, paramType, columnLabel, tmst);
                 default:
                     throw new AssertionError("Unsupported column type: " + paramType);
             }
-
         }
         return params;
     }
 
-    private ParamType getParamType(int column, java.sql.ResultSetMetaData metaData) throws SQLException {
-        String columnTypeName = metaData.getColumnTypeName(column);
-        String columnClassName = metaData.getColumnClassName(column);
+    private ParamType getParamType(String columnClassName) throws SQLException {
         if (columnClassName.equals("java.lang.Boolean")) {
             return ParamType.BOOLEAN;
         } else if (columnClassName.equals("java.lang.Short")) {
@@ -229,9 +232,11 @@ public class StatementMaker {
         } else if (columnClassName.equals("java.lang.String")) {
             return ParamType.STRING;
         } else if (columnClassName.equals("java.sql.Time")) {
+            return ParamType.SQL_TIME;
+        } else if (columnClassName.equals("java.sql.Date")) {
             return ParamType.SQL_DATE;
-        } else if (columnClassName.equals("java.sql.Date") || columnClassName.equals("java.sql.Timestamp")) {
-            return ParamType.SQL_DATE;
+        } else if (columnClassName.equals("java.sql.Timestamp")) {
+            return ParamType.SQL_TIMESTAMP;
         } else if (columnClassName.equals("[B")) {
             return ParamType.BYTES;
         } else {
