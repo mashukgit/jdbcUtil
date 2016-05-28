@@ -16,7 +16,7 @@ import soayjoni.jdbcutil.util.ParamType;
  *
  * @author mashuk
  */
-public class StatementMaker {
+public class StatementUtil {
 
     private boolean checkDuplicateIndex(Param[] params) {
         if (params == null) {
