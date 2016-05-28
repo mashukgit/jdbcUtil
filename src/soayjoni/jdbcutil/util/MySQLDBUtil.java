@@ -23,24 +23,18 @@ public class MySQLDBUtil extends AbstractDBUtil {
     @Override
     public boolean openDB() throws SQLException {
         if (connectionTryCounter >= 60) {
-            return con != null;
+            return hasConnected();
         }
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MySQLDBUtil.class.getName()).log(Level.SEVERE, null, ex);
+            con = null;
         }
         con = DriverManager.getConnection(dbUrl);
-        if (con != null) {
+        if (hasConnected()) {
             return true;
-        } else {
-            connectionTryCounter++;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-            return openDB();
         }
+        return tryAgain();
     }
-
 }
